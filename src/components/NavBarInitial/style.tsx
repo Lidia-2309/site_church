@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-<link href="https://fonts.googleapis.com/css2?family=Asul&display=swap" rel="stylesheet"></link>
-
 export const Body = styled.body`
     
    div{
@@ -35,7 +33,7 @@ img {
 
 h3 {
   color: white;
-  font-family: 'Asul', sans-serif;
+  font-family: 'EB Garamond', serif;
   letter-spacing: 1px;
   text-indent: -70vh;
 }

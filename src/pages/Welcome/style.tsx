@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-<link href="https://fonts.googleapis.com/css2?family=Rosarivo&display=swap" rel="stylesheet"></link>
-
 export const Container = styled.div`
   overflow: hidden;
   overflow-y: hidden;
@@ -10,7 +8,7 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
 
-  .div_button{
+  .div_layout{
     display: flex;
     height: 100%;
     align-items: center;
@@ -82,4 +80,13 @@ overflow-y: hidden;
   width: 100vw;
   margin: 0;
   padding: 0;
+
+
+  @media (min-width: 413px) and (max-width: 884px){
+    background-image: url(assets/fundoTablet.png);
+  }
+
+  @media (max-width: 412px) {
+    background-image: url(assets/fundoCelular.png);
+  }
 `;

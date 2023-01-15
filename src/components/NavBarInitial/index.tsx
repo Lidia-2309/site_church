@@ -9,7 +9,6 @@ const NavbarInitial = () => {
         <img src="assets/logoBranca.png" alt=""></img>
         <h3>PRIMEIRA IGREJA BÍBLICA INDEPENDENTE DE FORTALEZA</h3>  
         </nav>
-        {/* <img src="Book Dream Logo.png" alt=""/> */}
     </div>
     </Body>
   );
