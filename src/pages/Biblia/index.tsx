@@ -15,13 +15,7 @@ interface Book {
 
 export const Biblia = () => {
 
-    const searchbooks = {
-        livros: [""]
-      };
-
     const [data, setData] = useState<Book[]>([]);
-    const [show, setShow] = useState(false);
-
 
     useEffect(()=>{
         api
@@ -33,24 +27,18 @@ export const Biblia = () => {
         })
     },[]);
 
-    const handleClick = () => {
-        setShow(!show)
-    }
-    
-    const names = data.map((item: { name: string }) => item.name);
-
     return (
         <>
              <NavbarInitial></NavbarInitial> 
                 <CenterContent>
-                    {/* <h4>Usuario: {user}</h4>
-                    <h4>Biorafia: {user}</h4> */}
-                    <button onClick={handleClick}> Clique aqui </button>
-                    {show && 
-                        <div> {names.map(name => (
-                            <div key={name}>{name}</div>
-                          ))} </div>
-                    }     
+                        <select>
+                            <option value="">LIVROS</option> 
+                            {data.map(data => (
+                                <option key={data.name}>
+                                    {data.name}
+                                </option>))
+                            } 
+                        </select>   
                 </CenterContent> 
 
         </>
