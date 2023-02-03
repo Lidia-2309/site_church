@@ -4,6 +4,7 @@ import { CenterContent } from "./style"
 import { useEffect, useState } from "react"
 import apibiblia from "../../services/api"
 import { Button } from 'reactstrap';
+import ButtonData from "../../components/Button/index"
 
 interface Books {
     abbrev: {pt: string, en: string},
@@ -65,9 +66,8 @@ export const Biblia = () => {
                             <option value="">LIVROS</option>  */}
                         <div className="divButton">
                             {data && data.filter((p:any)=> p.testament == "VT").map(data => (
-                                <Button outline color="info" className="Button" value={data.abbrev.pt} key={data.abbrev.pt}>
-                                    {data.name}
-                                </Button>))
+                               <ButtonData data={data}/> 
+                                ))
                             } 
                         </div>
                     {/*     </select>  */}

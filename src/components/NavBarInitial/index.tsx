@@ -1,17 +1,27 @@
 import React from "react";
-import { Body } from "./style";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Navbar, NavbarBrand } from "reactstrap";
+import { NavBarStyle } from "./style";
 
 const NavbarInitial = () => {
   return (
-    <Body>
-    <div>
-      <nav className="navbar">
-        <img src="assets/logoBranca.png" alt=""></img>
-        <h3>PRIMEIRA IGREJA BÍBLICA INDEPENDENTE DE FORTALEZA</h3>  
-        </nav>
-    </div>
-    </Body>
+    <NavBarStyle>
+    <Navbar
+    className="my-2"
+    id="navbar"
+  >
+    <NavbarBrand href="/home">
+      <img
+        alt="logo"
+        src="assets/logoBranca.png"
+      />
+      <span>PRIMEIRA IGREJA BÍBLICA INDEPENDENTE DE FORTALEZA</span>
+    </NavbarBrand>
+  </Navbar>
+  </NavBarStyle>
   );
 };
 
 export default NavbarInitial;
+
+
