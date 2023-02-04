@@ -3,7 +3,7 @@ import { Container, FullscreenImage } from "../Welcome/style"
 import { CenterContent } from "./style"
 import { useEffect, useState } from "react"
 import apibiblia from "../../services/api"
-import { Button } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import ButtonData from "../../components/Button/index"
 
 interface Books {
@@ -30,7 +30,14 @@ export const Biblia = () => {
     const [book, setBook] = useState<Book>();
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [modal, setModal] = useState(false);
+    const [nestedModal, setNestedModal] = useState(false);
+    const [closeAll, setCloseAll] = useState(false);
+    const [variables, setVaribles] = useState();
 
+    const toggle = () => setModal(!modal);
+
+    // GET de todos os livros    
     useEffect(()=>{
         apibiblia
         .get<Books[]>("/books")
@@ -41,22 +48,21 @@ export const Biblia = () => {
         })
     },[]);
 
-
-
+    // Função que recebe dados do livro selecionado  
     const handleSelectBook = async (value:any) => {
         try{
             setLoading(true);
             const response = await apibiblia
             .get<Book>(`/books/${value.target.value}`)
                 setBook(response.data);
-                setShow(true);    
+                setModal(!modal);    
                 console.log(book)
         }
         finally{
             setLoading(false);
         }
     }
-   
+ 
     return (
         <>
              <NavbarInitial></NavbarInitial> 
@@ -66,36 +72,29 @@ export const Biblia = () => {
                             <option value="">LIVROS</option>  */}
                         <div className="divButton">
                             {data && data.filter((p:any)=> p.testament == "VT").map(data => (
-                               <ButtonData data={data}/> 
+                               <ButtonData data={data} onClick={handleSelectBook}/> 
                                 ))
                             } 
                         </div>
-                    {/*     </select>  */}
-                        { book &&
-                           <>
-                            <h4>Autor: {book.author}</h4>
-                           <p>Capitulos: {book.chapters}</p>
-                           {/* <p>{book.comment}</p> */}
-                        </>
-                        }
-                        <div className="Ntestament"><h2>Novo Testamento</h2></div>
-                        {/* <select className="NTSelect" onChange={(e) => handleSelectBook(e)}>
-                            <option value="">LIVROS</option> 
-                            {data && data.filter((p:any)=> p.testament == "NT").map(data => (
-                                <option value={data.abbrev.pt} key={data.abbrev.pt}>
-                                    {data.name}
-                                </option>))
-                            } 
-                        </select>  */}
-                        { book &&
-                           <>
-                           
-                           <h4>Autor: {book.author}</h4>
-                           <p>Capitulos: {book.chapters}</p>
-                          {/*  <p>{book.comment}</p> */}
-                        </>
-                        }
-                </CenterContent> 
+
+                        <Modal isOpen={modal} toggle={toggle}>
+                            <ModalHeader toggle={toggle}>Escolha a versão:</ModalHeader>
+                                <ModalBody>
+                                    <br />
+                                    <Button color="success">
+                                        ARA
+                                    </Button>
+                                    <Button color="success">
+                                        NVI
+                                    </Button>
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button color="secondary" onClick={toggle}>
+                                        Cancel
+                                    </Button>
+                                </ModalFooter>
+                        </Modal>
+                    </CenterContent> 
 
         </>
     )

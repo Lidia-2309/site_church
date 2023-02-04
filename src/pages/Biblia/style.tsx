@@ -8,8 +8,9 @@ export const CenterContent = styled.div`
     height: 100vh;
 
     .Vtestament, .Ntestament{
+        
         position:absolute;
-        margin: 5vh;
+        margin-top: 5vh;
         color: white;
         display: flex;
         align-items: center;
@@ -47,23 +48,17 @@ export const CenterContent = styled.div`
         top: 70vh;
     }
     .divButton{
-    position: absolute;
-    align-items:center;
-    justify-content:center;
-    display:flex;
-    flex-wrap: wrap;
+        top:250px;
+        position: absolute;
+        align-items:center;
+        justify-content:center;
+        display:flex;
+        flex-wrap: wrap;
+        margin-left:5vh;
+        margin-right:5vh;
+        margin-top:1vh;
     }
 
-    .Button{
-        border-color: #7db2cc;
-        color: #4A6B7C;
-        margin:5px;
 
-        :hover{
-            background-color: #4A6B7C;
-            color: white;
-            border-color: #4A6B7C;
-        }
-    }
 `;
 
