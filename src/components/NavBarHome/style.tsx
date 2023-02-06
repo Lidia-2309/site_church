@@ -65,6 +65,11 @@ export const NavBarHomeStyles= styled.nav`
     box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.3); 
     z-index: 999; 
 }
+
+.DropMenuBible{
+  margin:-5px 110px 5px 4px
+}
+
 `;
 
 

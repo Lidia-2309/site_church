@@ -1,6 +1,6 @@
 import NavbarInitial from "../../components/NavBarInitial"
 import { Container, FullscreenImage } from "../Welcome/style"
-import { CenterContent } from "./style"
+import { CenterContent, StyledButton } from "./style"
 import { useEffect, useState } from "react"
 import apibiblia from "../../services/api"
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
@@ -24,11 +24,17 @@ interface Book{
     testament:string
 }
 
+interface versions {
+    version:string,
+    verses:number
+}
+
 export const Biblia = () => {
 
-    const [data, setData] = useState<Books[]>([]);
+    const [dataBooks, setDataBooks] = useState<Books[]>([]);
     const [book, setBook] = useState<Book>();
-    const [show, setShow] = useState(false);
+    const [version, setVersion] = useState();
+    const [versions, setVersions] = useState<versions[]>([]);
     const [loading, setLoading] = useState(false);
     const [modal, setModal] = useState(false);
     const [nestedModal, setNestedModal] = useState(false);
@@ -42,7 +48,7 @@ export const Biblia = () => {
         apibiblia
         .get<Books[]>("/books")
         .then((response) => 
-            setData(response.data))
+            setDataBooks(response.data))
         .catch((err)=>{
             console.log("ops! ocorreu um erro" + err)
         })
@@ -62,7 +68,17 @@ export const Biblia = () => {
             setLoading(false);
         }
     }
- 
+    
+    useEffect (() => {
+        apibiblia
+        .get<versions[]>("/versions")
+        .then((response) => setVersions(response.data))
+        .catch((err) => (console.log("Erro: ", err)))
+    },[])
+
+    const handleDSelectVersion = async (value:any) => {
+      console.log()
+    }
     return (
         <>
              <NavbarInitial></NavbarInitial> 
@@ -71,7 +87,7 @@ export const Biblia = () => {
                         {/* <select className="VTSelect" onChange={(e) => handleSelectBook(e)}>
                             <option value="">LIVROS</option>  */}
                         <div className="divButton">
-                            {data && data.filter((p:any)=> p.testament == "VT").map(data => (
+                            {dataBooks && dataBooks.filter((p:any)=> p.testament == "VT").map(data => (
                                <ButtonData data={data} onClick={handleSelectBook}/> 
                                 ))
                             } 
@@ -81,16 +97,16 @@ export const Biblia = () => {
                             <ModalHeader toggle={toggle}>Escolha a versão:</ModalHeader>
                                 <ModalBody>
                                     <br />
-                                    <Button color="success">
-                                        ARA
-                                    </Button>
-                                    <Button color="success">
-                                        NVI
-                                    </Button>
+                                    {versions.map(data => (
+                                        data.version == "ra" ?
+                                        <StyledButton color="success"className="button-version">ARA</StyledButton> 
+                                        : <StyledButton color="success" className="button-version">{data.version.toUpperCase()}</StyledButton> 
+                                        ))
+                                    } 
                                 </ModalBody>
                                 <ModalFooter>
                                     <Button color="secondary" onClick={toggle}>
-                                        Cancel
+                                        Cancelar
                                     </Button>
                                 </ModalFooter>
                         </Modal>

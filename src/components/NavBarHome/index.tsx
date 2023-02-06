@@ -18,7 +18,7 @@ import { NavBarHomeStyles } from "./style";
 
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { MdOutlineClose } from 'react-icons/md'
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 
 const NavbarHome = (args:any) => {
@@ -29,6 +29,11 @@ const NavbarHome = (args:any) => {
     const handleClickIcon = () => {
         //navigate("/")
         setShowMenu(!showMenu);
+    }
+
+    const navigateBible = useNavigate();
+    const handleClickBiblia = () => {
+        navigateBible("/biblia")
     }
 
     return (
@@ -65,8 +70,8 @@ const NavbarHome = (args:any) => {
                             </DropdownToggle>
                             <DropdownMenu right>
                                 <DropdownItem>Todas</DropdownItem>
-                                <DropdownItem>Casais</DropdownItem>
                                 <DropdownItem divider />
+                                <DropdownItem>Casais</DropdownItem>
                                 <DropdownItem>Jovens</DropdownItem>
                                 <DropdownItem>Crianças</DropdownItem>
                             </DropdownMenu>
@@ -77,7 +82,16 @@ const NavbarHome = (args:any) => {
                 <Collapse isOpen={showMenu} navbar>
                     <div className="menu-lateral">
                         <MdOutlineClose className="iconClosed" onClick={handleClickIcon} ></MdOutlineClose> 
-                        <a href="/biblia" className="menu-text">BÍBLIA</a>
+                        <UncontrolledDropdown>
+                            <DropdownToggle nav caret>
+                                BÍBLIA
+                            </DropdownToggle>
+                            <DropdownMenu className="DropMenuBible"right>
+                                <DropdownItem onClick={handleClickBiblia}>Antigo Testamento</DropdownItem>
+                                <DropdownItem divider />
+                                <DropdownItem onClick={handleClickBiblia}>Novo Testamento</DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
                     </div>
                 </Collapse>
             </Navbar>

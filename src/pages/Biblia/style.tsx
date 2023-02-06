@@ -1,5 +1,11 @@
 import styled from "styled-components";
 
+import { Button } from 'reactstrap';
+
+export const StyledButton = styled(Button)`
+  margin-right:10px;
+`;
+
 export const CenterContent = styled.div`
     flex-direction: column;
     display: flex;
@@ -57,6 +63,10 @@ export const CenterContent = styled.div`
         margin-left:5vh;
         margin-right:5vh;
         margin-top:1vh;
+    }
+
+    .button-version{
+        margin-right: 10px !important;
     }
 
 
