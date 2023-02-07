@@ -4,7 +4,8 @@ import { CenterContent, StyledButton } from "./style"
 import { useEffect, useState } from "react"
 import apibiblia from "../../services/api"
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import ButtonData from "../../components/Button/index"
+import ButtonData from "../../components/Button/index";
+import { useNavigate } from "react-router-dom";
 
 interface Books {
     abbrev: {pt: string, en: string},
@@ -29,19 +30,50 @@ interface versions {
     verses:number
 }
 
-export const Biblia = () => {
+export const BibliaAT = () => {
 
     const [dataBooks, setDataBooks] = useState<Books[]>([]);
-    const [book, setBook] = useState<Book>();
-    const [version, setVersion] = useState();
+    const [book, setBook] = useState<Book>({abbrev: {pt: "", en: ""}, author: "", chapters: 0, comment: "", group: "", name: "",testament: ""});
+    const [version, setVersion] = useState<string | null>(null);
     const [versions, setVersions] = useState<versions[]>([]);
     const [loading, setLoading] = useState(false);
     const [modal, setModal] = useState(false);
     const [nestedModal, setNestedModal] = useState(false);
     const [closeAll, setCloseAll] = useState(false);
-    const [variables, setVaribles] = useState();
+    const [chapters, setChapters] = useState([]);
+    const navigateVerses = useNavigate();
+
+    const handleNavigateVerses = () => {
+        navigateVerses("/bibliaAT/versiculos")
+    }
 
     const toggle = () => setModal(!modal);
+
+    const toggleNestedClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        let versionn = '';
+        try {
+            setLoading(true);
+            console.log("carregando...");
+            versionn = e.currentTarget.value;
+            setNestedModal(!nestedModal);
+            setCloseAll(false);
+        } finally {
+            setLoading(false);
+            console.log("VERSION:" + versionn);
+            setVersion(versionn)
+        }
+        };
+
+
+    const toggleNested = () => {
+        setNestedModal(!nestedModal);
+        setCloseAll(false);
+    };
+
+      const toggleAll = () => {
+        setNestedModal(!nestedModal);
+        setCloseAll(true);
+      };
 
     // GET de todos os livros    
     useEffect(()=>{
@@ -56,16 +88,29 @@ export const Biblia = () => {
 
     // Função que recebe dados do livro selecionado  
     const handleSelectBook = async (value:any) => {
+        let bookk: Book = {
+            abbrev: {
+                pt: "",
+                en: ""
+            },
+            author: "",
+            chapters: 0,
+            comment: "",
+            group: "",
+            name: "",
+            testament: ""
+        };
         try{
             setLoading(true);
             const response = await apibiblia
             .get<Book>(`/books/${value.target.value}`)
-                setBook(response.data);
+                bookk = response.data;
                 setModal(!modal);    
-                console.log(book)
         }
         finally{
             setLoading(false);
+            setBook(bookk);
+            console.log(book);
         }
     }
     
@@ -76,9 +121,22 @@ export const Biblia = () => {
         .catch((err) => (console.log("Erro: ", err)))
     },[])
 
-    const handleDSelectVersion = async (value:any) => {
+    const handleSelectVersion = async (value:any) => {
       console.log()
     }
+
+    useEffect(()=>{
+        let arrayChapters:any = [];
+        for(let i=1; i<=book.chapters; i++){
+                arrayChapters.push(<Button onClick = {handleNavigateVerses} color="success" key={i}>{i}</Button>)
+        }
+
+        setChapters(arrayChapters)
+    },[book.chapters])
+    
+
+
+
     return (
         <>
              <NavbarInitial></NavbarInitial> 
@@ -99,10 +157,25 @@ export const Biblia = () => {
                                     <br />
                                     {versions.map(data => (
                                         data.version == "ra" ?
-                                        <StyledButton color="success"className="button-version">ARA</StyledButton> 
-                                        : <StyledButton color="success" className="button-version">{data.version.toUpperCase()}</StyledButton> 
+                                        <StyledButton value="ra" onClick={toggleNestedClick} color="success"className="button-version">ARA</StyledButton> 
+                                        : <StyledButton value={data.version} onClick={toggleNestedClick} color="success" className="button-version">{data.version.toUpperCase()}</StyledButton> 
                                         ))
                                     } 
+                                    <Modal
+                                        isOpen={nestedModal}
+                                        toggle={toggleNested}
+                                        onClosed={closeAll ? toggle : undefined}
+                                    >
+                                        <ModalHeader>Escolha o capítulo:</ModalHeader>
+                                        <ModalBody>
+                                            {chapters}
+                                        </ModalBody>
+                                        <ModalFooter>
+                                        <Button color="secondary" onClick={toggleAll}>
+                                            Cancelar
+                                        </Button>
+                                        </ModalFooter>
+                                    </Modal>
                                 </ModalBody>
                                 <ModalFooter>
                                     <Button color="secondary" onClick={toggle}>
@@ -116,4 +189,4 @@ export const Biblia = () => {
     )
 }
 
-export default Biblia
+export default BibliaAT

@@ -33,7 +33,7 @@ const NavbarHome = (args:any) => {
 
     const navigateBible = useNavigate();
     const handleClickBiblia = () => {
-        navigateBible("/biblia")
+        navigateBible("/bibliaAT")
     }
 
     return (
@@ -115,7 +115,7 @@ export default NavbarHome
             {showMenu && 
                 <div className="menu-lateral">
                     <MdOutlineClose className="iconClosed" onClick={handleClickIcon} ></MdOutlineClose>
-                    <a href="/biblia" className="menu-text">BÍBLIA</a>
+                    <a href="/bibliaAT" className="menu-text">BÍBLIA</a>
                 </div>
             }
         </div> */}
