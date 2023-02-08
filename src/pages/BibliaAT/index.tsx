@@ -40,16 +40,13 @@ export const BibliaAT = () => {
     const [modal, setModal] = useState(false);
     const [nestedModal, setNestedModal] = useState(false);
     const [closeAll, setCloseAll] = useState(false);
+    const [chapter, setChapter] = useState<number | null>(null);
     const [chapters, setChapters] = useState([]);
     const navigateVerses = useNavigate();
-
-    const handleNavigateVerses = () => {
-        navigateVerses("/bibliaAT/versiculos")
-    }
-
+    const versionnn: string = ("");
     const toggle = () => setModal(!modal);
 
-    const toggleNestedClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const toggleNestedClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
         let versionn = '';
         try {
             setLoading(true);
@@ -60,12 +57,14 @@ export const BibliaAT = () => {
         } finally {
             setLoading(false);
             console.log("VERSION:" + versionn);
-            setVersion(versionn)
+            await setVersion(versionn)
+
         }
         };
 
 
     const toggleNested = () => {
+        console.log("VERSION TOOGLE:", version)
         setNestedModal(!nestedModal);
         setCloseAll(false);
     };
@@ -121,21 +120,48 @@ export const BibliaAT = () => {
         .catch((err) => (console.log("Erro: ", err)))
     },[])
 
-    const handleSelectVersion = async (value:any) => {
-      console.log()
-    }
+    const handleSelectChapter = (value:any) => {
+        let chapterr = 0;
+        try {
+            setLoading(true);
+            console.log("carregando...");
+            chapterr = value.currentTarget.value;
+            setNestedModal(!nestedModal);
+            setCloseAll(false);
+        } finally {
+            setLoading(false);
+            setChapter(chapterr)
+            
+            /* navigateVerses("/bibliaAT/versiculos", { 
+                state: { 
+                    version: version,
+                    book:book.abbrev.pt,
+                    chapter: chapter
+                }
+            }) */
+        }
+        };
+        useEffect(() => {
+            if(chapter!=null && version !=null){
+                navigateVerses("/bibliaAT/versiculos", { 
+                    state: { 
+                        version: version,
+                        book:book.abbrev.pt,
+                        chapter: chapter
+                    }
+                })
+            }
+          }, [chapter])
+
 
     useEffect(()=>{
         let arrayChapters:any = [];
         for(let i=1; i<=book.chapters; i++){
-                arrayChapters.push(<Button onClick = {handleNavigateVerses} color="success" key={i}>{i}</Button>)
+                arrayChapters.push(<Button onClick = {handleSelectChapter} color="success" value={i} key={i}>{i}</Button>)
         }
 
         setChapters(arrayChapters)
     },[book.chapters])
-    
-
-
 
     return (
         <>
