@@ -34,9 +34,12 @@ interface Verses {
 export const Verses = () => {
     const location =  useLocation() as any;
     const book = location && location.state.book;
+    const bookName = location && location.state.bookName;
     const version = location && location.state.version;
     const chapter = location && location.state.chapter;
     const [verse, setVerse] = useState<text[]>([]);
+
+    const [versionName, setVersionName] = useState("")
 
     //Endpoint: GET https://www.abibliadigital.com.br/api/verses/:version/:abbrev/:chapter
 
@@ -47,12 +50,21 @@ export const Verses = () => {
         .catch((err) => (console.log(err)))
     },[])
 
+    useEffect(()=>{
+      if(version=="ra"){
+          setVersionName("ARA")
+      }else{
+          setVersionName(version)
+      }
+  },[])
+
 
     return (
         <>
             <StyleVerses>
+                <h3>{bookName} {chapter} - {versionName.toUpperCase()}</h3>
                 {verse && verse.map(data => (
-                <div>{data.number}{data.text}</div>
+                <div><span className="number">{data.number}</span><span className="text">{data.text}</span></div>
             ))}
             </StyleVerses> 
         </>

@@ -142,11 +142,12 @@ export const BibliaAT = () => {
         }
         };
         useEffect(() => {
-            if(chapter!=null && version !=null){
+            if(chapter!=null && version !=null && book.name != ""){
                 navigateVerses("/bibliaAT/versiculos", { 
                     state: { 
                         version: version,
                         book:book.abbrev.pt,
+                        bookName:book.name,
                         chapter: chapter
                     }
                 })
