@@ -2,47 +2,35 @@ import NavbarInitial from "../../components/NavBarInitial"
 import { Container, FullscreenImage } from "../Welcome/style"
 import { CenterContent, StyledButton } from "./style"
 import { useEffect, useState } from "react"
-import apibiblia from "../../services/api"
+import apibiblia from "../../services/bible/api"
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import ButtonData from "../../components/Button/index";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import LoadingIcons from 'react-loading-icons';
+import {BallTriangle } from 'react-loading-icons';
+import { Loading } from "../Verses/styles"
+import { Book, Books, versionsInter } from "../../services/bible/interfaces"
 
-interface Books {
-    abbrev: {pt: string, en: string},
-    author: string,
-    chapters: number,
-    group: string,
-    name: string,
-    testament: string
-}
-interface Book{
-    abbrev: {pt: string, en: string},
-    author:string,
-    chapters:number,
-    comment:string,
-    group:string,
-    name:string,
-    testament:string
-}
 
-interface versions {
-    version:string,
-    verses:number
-}
 
-export const BibliaAT = () => {
+export const Biblia = () => {
 
     const [dataBooks, setDataBooks] = useState<Books[]>([]);
     const [book, setBook] = useState<Book>({abbrev: {pt: "", en: ""}, author: "", chapters: 0, comment: "", group: "", name: "",testament: ""});
     const [version, setVersion] = useState<string | null>(null);
-    const [versions, setVersions] = useState<versions[]>([]);
+    const [versions, setVersions] = useState<versionsInter[]>([]);
     const [loading, setLoading] = useState(false);
     const [modal, setModal] = useState(false);
     const [nestedModal, setNestedModal] = useState(false);
     const [closeAll, setCloseAll] = useState(false);
     const [chapter, setChapter] = useState<number | null>(null);
     const [chapters, setChapters] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
     const navigateVerses = useNavigate();
+    const location = useLocation();
+    const typeTestment = location && location.state.type;
+
     const versionnn: string = ("");
     const toggle = () => setModal(!modal);
 
@@ -78,8 +66,10 @@ export const BibliaAT = () => {
     useEffect(()=>{
         apibiblia
         .get<Books[]>("/books")
-        .then((response) => 
-            setDataBooks(response.data))
+        .then((response) => {
+            setDataBooks(response.data);
+            setIsLoading(false)
+        })
         .catch((err)=>{
             console.log("ops! ocorreu um erro" + err)
         })
@@ -115,7 +105,7 @@ export const BibliaAT = () => {
     
     useEffect (() => {
         apibiblia
-        .get<versions[]>("/versions")
+        .get<versionsInter[]>("/versions")
         .then((response) => setVersions(response.data))
         .catch((err) => (console.log("Erro: ", err)))
     },[])
@@ -132,18 +122,11 @@ export const BibliaAT = () => {
             setLoading(false);
             setChapter(chapterr)
             
-            /* navigateVerses("/bibliaAT/versiculos", { 
-                state: { 
-                    version: version,
-                    book:book.abbrev.pt,
-                    chapter: chapter
-                }
-            }) */
         }
         };
         useEffect(() => {
             if(chapter!=null && version !=null && book.name != ""){
-                navigateVerses("/bibliaAT/versiculos", { 
+                navigateVerses("/biblia/versiculos", { 
                     state: { 
                         version: version,
                         book:book.abbrev.pt,
@@ -164,18 +147,21 @@ export const BibliaAT = () => {
         setChapters(arrayChapters)
     },[book.chapters])
 
-    return (
+    return (!isLoading ? (
         <>
              <NavbarInitial></NavbarInitial> 
                 <CenterContent>
-                    <div className="Vtestament"><h2>Antigo Testamento</h2></div>
+                   { typeTestment=="AT" ? (<div className="Vtestament"><h2>Antigo Testamento</h2></div>):(<div className="Vtestament"><h2>Novo Testamento</h2></div>)}
                         {/* <select className="VTSelect" onChange={(e) => handleSelectBook(e)}>
                             <option value="">LIVROS</option>  */}
                         <div className="divButton">
-                            {dataBooks && dataBooks.filter((p:any)=> p.testament == "VT").map(data => (
+                            {typeTestment=="AT" ? 
+                                (dataBooks && dataBooks.filter((p:any)=> p.testament == "VT").map(data => (
                                <ButtonData data={data} onClick={handleSelectBook}/> 
                                 ))
-                            } 
+                            ):(dataBooks && dataBooks.filter((p:any)=> p.testament == "NT").map(data => (
+                                <ButtonData data={data} onClick={handleSelectBook}/> 
+                                 )))} 
                         </div>
 
                         <Modal isOpen={modal} toggle={toggle}>
@@ -213,7 +199,7 @@ export const BibliaAT = () => {
                     </CenterContent> 
 
         </>
-    )
+    ) : (<Loading><BallTriangle stroke="#4a6b7c"/></Loading>))
 }
 
-export default BibliaAT
+export default Biblia

@@ -23,6 +23,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 const NavbarHome = (args:any) => {
 
+    const [type, setType] = useState<string>("");
     const [showMenu, setShowMenu] = useState(false);
     const toggle = () => setShowMenu(!showMenu);
 
@@ -32,8 +33,13 @@ const NavbarHome = (args:any) => {
     }
 
     const navigateBible = useNavigate();
-    const handleClickBiblia = () => {
-        navigateBible("/bibliaAT")
+
+    const handleClickBiblia = (value:string) => {
+        navigateBible("/biblia",{
+            state: {
+                type: value
+            }
+        })
     }
 
     return (
@@ -87,9 +93,9 @@ const NavbarHome = (args:any) => {
                                 BÍBLIA
                             </DropdownToggle>
                             <DropdownMenu className="DropMenuBible"right>
-                                <DropdownItem onClick={handleClickBiblia}>Antigo Testamento</DropdownItem>
+                                <DropdownItem onClick={() => handleClickBiblia("AT")}>Antigo Testamento</DropdownItem>
                                 <DropdownItem divider />
-                                <DropdownItem onClick={handleClickBiblia}>Novo Testamento</DropdownItem>
+                                <DropdownItem onClick={() => handleClickBiblia("NT")}>Novo Testamento</DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>
                     </div>
