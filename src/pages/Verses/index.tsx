@@ -1,10 +1,15 @@
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import GlobalStyle from '../../styles/global';
 import apibiblia from "../../services/bible/api";
 import { Loading, StyleVerses } from "./styles";
 import {BallTriangle } from 'react-loading-icons';
 import { verses, text } from "../../services/bible/interfaces";
 import { Form, FormGroup, Input, Label } from "reactstrap";
+import Switch from 'react-switch';
+import { ThemeProvider } from "styled-components";
+import light from "../../styles/themes/light";
+import dark from "../../styles/themes/dark";
 
 export const Verses = () => {
     const location =  useLocation() as any;
@@ -15,7 +20,11 @@ export const Verses = () => {
     const [verse, setVerse] = useState<text[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [versionName, setVersionName] = useState("");
-    const [theme, setTheme] = useState(false);
+    const [theme, setTheme] = useState(light);
+
+    const toggleTheme = () => {
+      setTheme(theme.title === 'light' ? dark : light)
+    }
 
     //Endpoint: GET https://www.abibliadigital.com.br/api/verses/:version/:abbrev/:chapter
 
@@ -38,7 +47,9 @@ export const Verses = () => {
 
     return (!isLoading ? (
       <>
-            <StyleVerses theme={theme}>
+        <ThemeProvider theme={theme}>
+          <GlobalStyle/>
+            <StyleVerses >
                 <div className="title-toogle">
                   <div className="title">
                   <h3>{bookName} {chapter} - {versionName.toUpperCase()}</h3> 
@@ -46,13 +57,18 @@ export const Verses = () => {
                   <div className="toogle">
                   <Form>
                     <FormGroup switch>
-                      <Input
-                        type="switch"
-                        checked={theme}
-                        onClick={() => {
-                          setTheme(!theme);
-                          console.log(theme);
-                        }}
+                      <Switch
+                        onChange={toggleTheme}
+                        checked={theme.title === "dark"}
+                        checkedIcon={false}
+                        uncheckedIcon={false}
+                        height={10}
+                        width={40}
+                        handleDiameter={20}
+                        onHandleColor="#fcfcfc"
+                        offHandleColor="#0a0a0a"
+                        onColor="#5a5c5a"
+                        offColor="#bac2bc"
                       />
                     </FormGroup>
                   </Form>
@@ -63,6 +79,7 @@ export const Verses = () => {
                 <div><span className="number">{data.number}</span><span className="text">{data.text}</span></div>
             ))}</div>
             </StyleVerses> 
+            </ThemeProvider>
         </>
     ) : (
       <Loading><BallTriangle stroke="#4a6b7c"/></Loading>
