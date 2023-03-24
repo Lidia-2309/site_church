@@ -27,16 +27,37 @@ export const NavBarHomeStyles= styled.nav`
     display: flex;
     flex-direction: row !important;
   }
-  a.nav-link, a.dropdown-toggle.nav-link, a.menu-text {
+  a.nav-link {
     text-decoration:none;
     font-family: 'EB Garamond', serif;
     color:white;
-    padding-left:25px;
+    margin-left:25px;
+    padding-left:10px;
+    padding-right:10px;
     :hover{
-      font-size:18px;
+      background-color: #3e5a69;
+      border-radius:10px;
       font-style:bold;
     }
   }
+
+  .prog{
+    :hover{
+      background-color: #3e5a69;
+      border-radius:10px;
+      font-style:bold;
+    }
+  }
+
+  a.dropdown-toggle.nav-link{
+    text-decoration:none;
+    font-family: 'EB Garamond', serif;
+    color:white;
+    margin-left:25px;
+    padding-left:10px;
+    padding-right:10px;
+  }
+
   button{
     border:none;
   }

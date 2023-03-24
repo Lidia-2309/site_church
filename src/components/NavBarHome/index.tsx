@@ -71,7 +71,7 @@ const NavbarHome = (args:any) => {
                             </NavLink>
                         </NavItem >
                         <UncontrolledDropdown>
-                            <DropdownToggle nav caret>
+                            <DropdownToggle className="prog" nav caret>
                                 PROGRAMAÇÕES
                             </DropdownToggle>
                             <DropdownMenu right>
